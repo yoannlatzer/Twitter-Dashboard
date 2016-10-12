@@ -66,6 +66,19 @@ var process_entities = function(message, entities) {
     return result;
 }
 
+var avatars = [
+  'adult_brick_brunette_child_clothes_clothing_fashion_598753.jpg',
+  'adult_child_clothes_clothing_farm_female_fern_598204.jpg',
+  'adventure_child_couple_girl_high_hiking_landscape_597929.jpg',
+  'adventure_child_female_fish_girl_goggles_gun_light_598580.jpg',
+  'adventure_climbing_daytime_grass_hiker_hiking_hill_598288.jpg',
+  'band_boy_child_concert_dark_fashion_fun_girl_598929.jpg',
+  'beachcomber_atlantic_ocean_silhouette_228374.jpg',
+  'beautiful_child_dress_eyes_fashion_female_girl_hat_599122.jpg',
+  'carefree_child_female_field_freedom_fun_girl_grass_598912.jpg',
+  'fashion_girl_187287.jpg'
+]
+
 block.fn.tweets = function(config) {
     var options = $.extend({
         memory: 20
@@ -79,6 +92,7 @@ block.fn.tweets = function(config) {
 
 
     // register default handler for handling tweet data
+    i = -1;
     this.actions(function(e, tweet){
         tweet = tweet.tweet;
         var $item = $('<li class="stream-item"></li>');
@@ -92,7 +106,11 @@ block.fn.tweets = function(config) {
         $account.attr("href", "http://twitter.com/" + tweet.user.screen_name);
 
         var $avatar = $("<img>").addClass("avatar");
-        $avatar.attr("src", tweet.user.profile_image_url);
+        i++
+        if ( i > 9 ) {
+          i = 0
+        }
+        $avatar.attr("src", '/img/profile_pic/' + avatars[i]);
         $account.append($avatar);
         $account.append($('<strong class="fullname">' + tweet.user.name + '</strong>'));
         $account.append($('<span>&nbsp;</span>'));
