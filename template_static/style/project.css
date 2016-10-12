@@ -1,2 +1,8 @@
 .counters {background-color:rgba(0,172,237,1)}
 .options {background-color:rgba(0,172,237,1)}
+
+.item img {
+	height: 100%;
+	width: 100%;
+	max-height: 300px; 
+}

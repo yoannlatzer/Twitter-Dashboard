@@ -3,6 +3,7 @@
 <head>
 <title>Twitter Dashboard</title>
 <link rel="stylesheet" href="/style/layout.css"/>
+<link rel="stylesheet" href="/style/project.css"/>
 <link rel="stylesheet" href="/style/theme.css"/>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
@@ -34,9 +35,40 @@ function setHeatMap(type) {
 <div class="container">
       <div class="row">
 
-<div class="col-xs-6" style="border:2px solid rgba(0,172,237,1); background-color:rgb(0,172,237);">
-      <img src="storm.jpg" alt="storm" style="width:100%;"/>
+<div id="pictures-carousel" class="col-xs-6 carousel slide" data-ride="carousel" style="border:2px solid rgba(0,172,237,1); background-color:rgb(0,172,237); height: 300px;">
+  <!-- Indicators -->
+  <ol class="carousel-indicators">
+    <li data-target="#pictures-carousel" data-slide-to="0" class="active"></li>
+    <li data-target="#pictures-carousel" data-slide-to="1"></li>
+    <li data-target="#pictures-carousel" data-slide-to="2"></li>
+  </ol>
+  <!-- Wrapper for slides -->
+  <div class="carousel-inner" role="listbox">
+      <div class="item active">
+        <img src="storm.jpg" alt="storm">
+        <div class="carousel-caption"></div>
+      </div>
+      <div class="item">
+        <img src="cloud.jpg" alt="cloud">
+        <div class="carousel-caption"></div>
+      </div>
+      <div class="item">
+        <img src="sun.jpg" alt="sun">
+        <div class="carousel-caption"></div> 
+      </div>
+  </div>
+  <!-- Controls -->
+  <a class="left carousel-control" href="#pictures-carousel" role="button" data-slide="prev">
+    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="right carousel-control" href="#pictures-carousel" role="button" data-slide="next">
+    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+
 </div>
+
 <div class="col-xs-1"></div>
 
 <div id="heatmap" class="col-xs-4" style="border:2px solid rgba(0,172,237,1); background-color:rgb(0,172,237);">
@@ -83,6 +115,8 @@ function setHeatMap(type) {
     <div id="mood_div"></div>
 </div>
     </div></div>
+
+<script src="bootstrap/js/bootstrap.min.js"></script>   
 <script>
 
 // create a rolling chart block
