@@ -1,0 +1,3 @@
+__pycache__/
+*.DS_Store
+/eca/__pycache__/
