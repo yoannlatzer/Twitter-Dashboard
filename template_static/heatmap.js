@@ -5495,6 +5495,9 @@ function drawRegionsMap(date, mood) {
     datalessRegionColor: '#E0E0E0',
     defaultColor: '#f5f5f5',
   };
+  if (typeof google.visualization == 'undefined' || typeof google.visualization.arrayToDataTable == 'undefined') {
+    return;
+  }
   if ( window.type == 'temperature' ) {
     var data = google.visualization.arrayToDataTable([
       ['Province', 'Temperature', 'Mood'],
