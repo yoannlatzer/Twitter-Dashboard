@@ -5534,19 +5534,19 @@ function drawRegionsMap(date, mood) {
   }
   if (window.type == 'mood') {
     var data = google.visualization.arrayToDataTable([
-      ['Province', 'Mood', 'Temperature'],
-      ['Noord-Holland', mood['Noord-Holland'], getAvarageTemp(235, date)],
-      ['Utrecht', mood['Utrecht'], getAvarageTemp(260, date)],
-      ['Friesland', mood['Friesland'], getAvarageTemp(270, date)],
-      ['Flevoland', mood['Flevoland'], getAvarageTemp(273, date)],
-      ['Gelderland', mood['Gelderland'], getAvarageTemp(275, date)],
-      ['Drenthe', mood['Drenthe'], getAvarageTemp(280, date)],
-      ['Groningen', mood['Groningen'], getAvarageTemp(286, date)],
-      ['Overijssel', mood['Overijssel'], getAvarageTemp(290, date)],
-      ['Zeeland', mood['Zeeland'], getAvarageTemp(310, date)],
-      ['Zuid-Holland', mood['Zuid-Holland'], getAvarageTemp(344, date)],
- 	    ['Noord-Brabant', mood['Noord-Brabant'], getAvarageTemp(370, date)],
-      ['Limburg', mood['Limburg'], getAvarageTemp(380, date)]
+      ['Province', 'Mood'],
+      ['Noord-Holland', mood['Noord-Holland']],
+      ['Utrecht', mood['Utrecht']],
+      ['Friesland', mood['Friesland']],
+      ['Flevoland', mood['Flevoland']],
+      ['Gelderland', mood['Gelderland']],
+      ['Drenthe', mood['Drenthe']],
+      ['Groningen', mood['Groningen']],
+      ['Overijssel', mood['Overijssel']],
+      ['Zeeland', mood['Zeeland']],
+      ['Zuid-Holland', mood['Zuid-Holland']],
+ 	    ['Noord-Brabant', mood['Noord-Brabant']],
+      ['Limburg', mood['Limburg']]
     ]);
     options.colorAxis = {minValue: 0, maxValue: 10, colors: ['red', 'green']}
   }
@@ -5563,45 +5563,60 @@ function drawRegionsMap(date, mood) {
   var currentDayTweets = []
   block.fn.heatmap = function(config) {
     this.actions(function(e, tweet) {
-      if (window.type == 'temperature' && (currentDate != tweet.date || last != 'temperature')) {
-        drawRegionsMap(tweet.date, tweet.mood)
-        currentDate = tweet.date
-        last = 'temperature'
+      var tweets = [];
+      if ( typeof tweet.buffer != 'undefined' ) {
+        tweet.buffer.tweets.map(function(t) {
+          tweets.push({
+            tweet: t,
+            date: tweet.date,
+            mood: tweet.mood
+          })
+        })
       }
-      else if (window.type == 'rain' && (currentDate != tweet.date || last != 'rain')) {
-        last = 'rain'
-        currentDate = tweet.date
-        
-        drawRegionsMap(tweet.date, tweet.mood)
+      else {
+        tweets.push(tweet)
       }
-      else if (window.type == 'mood') {
-        last = 'mood'
-        drawRegionsMap(tweet.date, tweet.mood)
-      }
-      else if (window.type == 'tweets') {
-        last = 'tweets'
-        if ( currentDate == tweet.date && currentDayTweets.length > 0 ) {
-          if ( tweet.tweet.coordinates != null && typeof tweet.tweet.coordinates == 'object') {
-            if ( tweet.tweet.coordinates.type == 'Point') {              
-              currentDayTweets.push([tweet.tweet.coordinates.coordinates[1], tweet.tweet.coordinates.coordinates[0], tweet.tweet.text])
-            }
-          }
-        }
-        else {
+      
+      tweets.map(function(tweet) {
+        if (window.type == 'temperature' && (currentDate != tweet.date || last != 'temperature')) {
+          drawRegionsMap(tweet.date, tweet.mood)
           currentDate = tweet.date
-          if ( tweet.tweet.coordinates != null && typeof tweet.tweet.coordinates == 'object') {
-            if ( tweet.tweet.coordinates.type == 'Point') {
-              currentDayTweets = [
-                ['Lat', 'Long', 'Tweet'],
-                [tweet.tweet.coordinates.coordinates[1], tweet.tweet.coordinates.coordinates[0], tweet.tweet.text]
-              ]
+          last = 'temperature'
+        }
+        else if (window.type == 'rain' && (currentDate != tweet.date || last != 'rain')) {
+          last = 'rain'
+          currentDate = tweet.date
+          drawRegionsMap(tweet.date, tweet.mood)
+        }
+        else if (window.type == 'mood') {
+          last = 'mood'
+          drawRegionsMap(tweet.date, tweet.mood)
+        }
+        else if (window.type == 'tweets') {
+          last = 'tweets'
+          if ( currentDate == tweet.date && currentDayTweets.length > 0 ) {
+            if ( tweet.tweet.coordinates != null && typeof tweet.tweet.coordinates == 'object') {
+              if ( tweet.tweet.coordinates.type == 'Point') {              
+                currentDayTweets.push([tweet.tweet.coordinates.coordinates[1], tweet.tweet.coordinates.coordinates[0], tweet.tweet.text])
+              }
             }
           }
+          else {
+            currentDate = tweet.date
+            if ( tweet.tweet.coordinates != null && typeof tweet.tweet.coordinates == 'object') {
+              if ( tweet.tweet.coordinates.type == 'Point') {
+                currentDayTweets = [
+                  ['Lat', 'Long', 'Tweet'],
+                  [tweet.tweet.coordinates.coordinates[1], tweet.tweet.coordinates.coordinates[0], tweet.tweet.text]
+                ]
+              }
+            }
+          }
+          if (currentDayTweets.length > 0) {
+            drawRegionsMap(tweet.date, currentDayTweets)
+          }
         }
-        if (currentDayTweets.length > 0) {
-          drawRegionsMap(tweet.date, currentDayTweets)
-        }
-      }
+      })
     })
     return this.$element
   }

@@ -92,9 +92,21 @@ block.fn.tweets = function(config) {
 
 
     // register default handler for handling tweet data
-    i = -1;
+    i = Math.round(Math.random(8)*9);
     this.actions(function(e, tweet){
-        tweet = tweet.tweet;
+      var tweets = [];
+      if ( typeof tweet.buffer != 'undefined' ) {
+        if ( $('.stream-item').length > 0 ) {
+          return;
+        }
+        for ( var j = 0; j < options.memory; j++ ) {
+          tweets.push(tweet.buffer.tweets[j])
+        }
+      }
+      else {
+        tweets = [tweet.tweet];
+      }
+      tweets.map(function(tweet) {
         var $item = $('<li class="stream-item"></li>');
 
         var $tweet = $('<div class="tweet"></div>');
@@ -140,6 +152,7 @@ block.fn.tweets = function(config) {
         if ($list.children().size() > options.memory) {
             $list.children().last().remove();
         }
+      })
     });
 
     return this.$element;
