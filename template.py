@@ -25,7 +25,7 @@ def setup(ctx, e):
     ctx.currentDay = 0
     ctx.dayTweets = 0
     ctx.now = 1
-    start_offline_tweets('weer.txt', 'chirp', time_factor=10000, arff_file='merge_final.arff')
+    start_offline_tweets('weer_zonderburen.txt', 'chirp', time_factor=10000, arff_file='merge_final.arff')
 
 # define a normal Python function
 def clip(lower, value, upper):
@@ -33,8 +33,7 @@ def clip(lower, value, upper):
 
 @event('chirp')
 def tweet(ctx, e):
-    # filter #Buren tweets
-    if e.data['text'].find('#Buren') == -1:
+    if e.data['extra']['@@weather@@'] == 'y':
       ctx.totalTweets += 1
       date = datetime.strptime(e.data['created_at'], '%a %b %d %H:%M:%S %z %Y')
       ctx.now = "{}{}{}".format(date.year, date.month, date.day)
@@ -59,7 +58,8 @@ def tweet(ctx, e):
       if ctx.photoCount > 14:
         ctx.photoCount = 0
         
-      ctx.buffer['tweets'].append(e.data)  
+      ctx.buffer['tweets'].append(e.data)
+      print (e.data['text'])  
       emit('tweet', {
         'date': ctx.now,
         'mood': {
