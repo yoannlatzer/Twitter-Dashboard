@@ -58,7 +58,8 @@ def tweet(ctx, e):
       if ctx.photoCount > 14:
         ctx.photoCount = 0
         
-      ctx.buffer['tweets'].append(e.data)  
+      ctx.buffer['tweets'].append(e.data)
+      print (e.data['text'])  
       emit('tweet', {
         'date': ctx.now,
         'mood': {
