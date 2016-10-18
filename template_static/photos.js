@@ -14,7 +14,7 @@ block.fn.photos = function(config) {
         }
         message.buffer.potd.map(function(img) {
           var $item = $('<div class="item"></div>');
-          var $image = $('<img src="' + img + '" />');
+          var $image = $('<img style="max-heigth:100%;max-width:100%;" src="' + img + '" />');
           $item.append($image);
           $list.prepend($item);
         })
@@ -22,7 +22,7 @@ block.fn.photos = function(config) {
       }
       else {
         var $item = $('<div class="item"></div>');
-        var $image = $('<img src="' + message.photo + '" />');
+        var $image = $('<img style="max-heigth:100%;max-width:100%;" src="' + message.photo + '" />');
         $item.append($image);
         $list.prepend($item);
         $('.active').removeClass('active');
