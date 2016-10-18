@@ -21,9 +21,9 @@
         viewWindowMode:'explicit',
         viewWindow: {
             min: 0,
-            max: 10
+            max: 2
         },
-        ticks: [0, 2.5, 5, 7.5, 10]
+        ticks: [0, 1, 2]
       }
     };
     if (typeof google.charts.Bar == 'undefined') {

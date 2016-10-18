@@ -18,11 +18,14 @@ def add_request_handlers(httpd):
 def setup(ctx, e):
     # set empty buffer
     ctx.buffer = {'tweets': [], 'potd': []}
+    ctx.mood = {'g': 0, 'b': 0, 'n': 0}
+    ctx.calculatedMood = 0
     ctx.photoCount = 0
-    ctx.totalTweets = 0
+    ctx.totalTweets = 1
     ctx.currentDay = 0
     ctx.dayTweets = 0
-    start_offline_tweets('weer.txt', 'chirp', time_factor=10000)
+    ctx.now = 1
+    start_offline_tweets('weer.txt', 'chirp', time_factor=10000, arff_file='merge_final.arff')
 
 # define a normal Python function
 def clip(lower, value, upper):
@@ -34,32 +37,33 @@ def tweet(ctx, e):
     if e.data['text'].find('#Buren') == -1:
       ctx.totalTweets += 1
       date = datetime.strptime(e.data['created_at'], '%a %b %d %H:%M:%S %z %Y')
-      now = "{}{}{}".format(date.year, date.month, date.day)
-      if now != ctx.currentDay:
-        ctx.currentDay = now
+      ctx.now = "{}{}{}".format(date.year, date.month, date.day)
+      if ctx.now != ctx.currentDay:
+        ctx.currentDay = ctx.now
         ctx.dayTweets = 0
         ctx.buffer['tweets'] = []
+        ctx.mood = {'g': 0, 'b': 0, 'n': 0}
+      
       ctx.dayTweets += 1
-      
+      calculateMood(ctx, e)
+            
       # check for url to replace it with an working picture
-      
       if 'media' in e.data['entities']:
         changeMedia(ctx, e)
         ctx.photoCount += 1
-        print(e.data['text'])
         
       if len(e.data['entities']['urls']) > 0:
         changeUrls(ctx, e)
         ctx.photoCount += 1
-        print(e.data['text'])
         
       if ctx.photoCount > 14:
         ctx.photoCount = 0
         
       ctx.buffer['tweets'].append(e.data)  
       emit('tweet', {
-        'date': now,
+        'date': ctx.now,
         'mood': {
+          'total': ctx.mood,
           'Noord-Holland': random.uniform(0, 10),
           'Utrecht': random.uniform(0, 10),
           'Friesland': random.uniform(0, 10),
@@ -78,10 +82,22 @@ def tweet(ctx, e):
           'total': ctx.totalTweets
         },
         'moodGeneral': {
-          'moodLevel': random.uniform(0,2)
+          'moodLevel': ctx.calculatedMood
         },
         'tweet': e.data
       })  
+
+def calculateMood(ctx, e):
+  if e.data['extra']['@@sentiment@@'] == 'b':
+    ctx.mood['b'] += 1
+    
+  if e.data['extra']['@@sentiment@@'] == 'g':
+    ctx.mood['g'] += 1
+    
+  if e.data['extra']['@@sentiment@@'] == 'n':
+    ctx.mood['n'] += 1
+    
+  ctx.calculatedMood = ((ctx.mood['g'] * 2) + ctx.mood['n']) / ctx.dayTweets
 
 def changeMedia(ctx, e): 
   e.data['text'] = e.data['text'].replace(e.data['entities']['media'][0]['url'], ' photo')
@@ -96,12 +112,13 @@ def changeUrls(ctx, e):
   emitPhoto(ctx, e)
   
 def emitPhoto(ctx, e):
-  emit('photo', {
-    'photo': photos[ctx.photoCount]
+  if e.data['extra']['@@weather@@'] == 'y':
+    emit('photo', {
+      'photo': photos[ctx.photoCount]
     })
-  ctx.buffer['potd'].append(photos[ctx.photoCount])
-  if len(ctx.buffer['potd']) > 5:
-    ctx.buffer['potd'].pop(0)
+    ctx.buffer['potd'].append(photos[ctx.photoCount])
+    if len(ctx.buffer['potd']) > 5:
+      ctx.buffer['potd'].pop(0)
   
 @event('buffer')
 def loadBuffer(ctx, e):
