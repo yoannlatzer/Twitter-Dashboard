@@ -158,3 +158,16 @@ pre {
 .tweet-list .tweet .tweet-text {
     white-space: pre-wrap
 }
+
+/* Mood Meter */
+
+#mood-container {
+    height: 250px;
+}
+
+#mood-div {
+    background-color: grey;
+    width: 50%;
+    margin: 0px auto;
+}
+

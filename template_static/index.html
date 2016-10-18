@@ -81,7 +81,9 @@ function setHeatMap(type) {
     </div>
     <div class="col-xs-1"></div>
     <div class="col-xs-3" style="border:2px solid rgba(0,172,237,1); padding-top:20px;">
-      <div id="mood_div"></div>
+      <div id="mood-container">
+        <div id="mood-div"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -91,7 +93,7 @@ function setHeatMap(type) {
 // create a rolling chart block
 block('#date').date();
 block('#heatmap').heatmap();
-block('#mood_div').moodlevel();
+block('#mood-div').moodlevel();
 block('#counter').counter();
 block('#pictures-carousel').photos();
 block('#tweets').tweets({
@@ -100,7 +102,7 @@ block('#tweets').tweets({
 
 // connect sample event to graph
 events.connect('tweet', '#date');
-events.connect('tweet', '#mood_div');
+events.connect('tweet', '#mood-div');
 events.connect('tweet', '#heatmap');
 events.connect('tweet', '#counter');
 events.connect('tweet', '#tweets');
