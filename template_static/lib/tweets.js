@@ -129,9 +129,10 @@ block.fn.tweets = function(config) {
         $account.append($('<span class="username"><s>@</s><b>' + tweet.user.screen_name + '</b></span>'));
         $header.append($account);
 
+        var tweet_created_at = tweet.created_at.replace("+0000",'') 
         // Build timestamp:
         var $time = $('<small class="time"></small>');
-        $time.append($('<span>' + tweet.created_at + '</span>'));
+        $time.append($('<span>' + tweet_created_at + '</span>'));
 
         $header.append($time);
         $content.append($header);
