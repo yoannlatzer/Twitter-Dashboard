@@ -78,7 +78,7 @@ def tweet(ctx, e):
           'total': ctx.totalTweets
         },
         'moodGeneral': {
-          'moodLevel': random.uniform(6,10)
+          'moodLevel': random.uniform(0,2)
         },
         'tweet': e.data
       })  
