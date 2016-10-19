@@ -38,9 +38,8 @@ def tweet(ctx, e):
       if ctx.totalTweets == 221:
         setup(ctx, e)
       date = datetime.strptime(e.data['created_at'], '%a %b %d %H:%M:%S %z %Y')
-      ctx.now = "{}{}{}".format(date.year, date.month, date.day)
-      if date.day < 10:
-        ctx.now = ctx.now[:6] + '0' + ctx.now[6:]
+      ctx.now = "{:%Y%m%d}".format(date)
+
       if ctx.now != ctx.currentDay:
         ctx.currentDay = ctx.now
         ctx.dayTweets = 0
