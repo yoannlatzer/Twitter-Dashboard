@@ -61,24 +61,8 @@ def tweet(ctx, e):
         ctx.photoCount = 0
         
       ctx.buffer['tweets'].append(e.data)
-      print (e.data['text'])  
       emit('tweet', {
         'date': ctx.now,
-        'mood': {
-          'total': ctx.mood,
-          'Noord-Holland': random.uniform(0, 10),
-          'Utrecht': random.uniform(0, 10),
-          'Friesland': random.uniform(0, 10),
-          'Flevoland': random.uniform(0, 10),
-          'Gelderland': random.uniform(0, 10),
-          'Drenthe': random.uniform(0, 10),
-          'Groningen': random.uniform(0, 10),
-          'Overijssel': random.uniform(0, 10),
-          'Zeeland': random.uniform(0, 10),
-          'Zuid-Holland': random.uniform(0, 10),
-          'Noord-Brabant': random.uniform(0, 10),
-          'Limburg': random.uniform(0, 10)
-        },
         'count': {
           'day': ctx.dayTweets,
           'total': ctx.totalTweets
@@ -124,22 +108,9 @@ def emitPhoto(ctx, e):
   
 @event('buffer')
 def loadBuffer(ctx, e):
+  ctx.buffer['moodGeneral'] = {'moodLevel': ctx.calculatedMood}
   emit('buffer', {
       'date': ctx.currentDay,
-      'mood': {
-        'Noord-Holland': random.uniform(0, 10),
-        'Utrecht': random.uniform(0, 10),
-        'Friesland': random.uniform(0, 10),
-        'Flevoland': random.uniform(0, 10),
-        'Gelderland': random.uniform(0, 10),
-        'Drenthe': random.uniform(0, 10),
-        'Groningen': random.uniform(0, 10),
-        'Overijssel': random.uniform(0, 10),
-        'Zeeland': random.uniform(0, 10),
-        'Zuid-Holland': random.uniform(0, 10),
-        'Noord-Brabant': random.uniform(0, 10),
-        'Limburg': random.uniform(0, 10)
-      },
       'buffer': ctx.buffer,
       'count': {
         'day': ctx.dayTweets,
