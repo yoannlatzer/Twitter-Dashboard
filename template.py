@@ -39,6 +39,8 @@ def tweet(ctx, e):
         setup(ctx, e)
       date = datetime.strptime(e.data['created_at'], '%a %b %d %H:%M:%S %z %Y')
       ctx.now = "{}{}{}".format(date.year, date.month, date.day)
+      if date.day < 10:
+        ctx.now = ctx.now[:6] + '0' + ctx.now[6:]
       if ctx.now != ctx.currentDay:
         ctx.currentDay = ctx.now
         ctx.dayTweets = 0
@@ -61,6 +63,7 @@ def tweet(ctx, e):
         ctx.photoCount = 0
         
       ctx.buffer['tweets'].append(e.data)
+      print(ctx.now)
       emit('tweet', {
         'date': ctx.now,
         'count': {

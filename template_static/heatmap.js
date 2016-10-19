@@ -5455,6 +5455,7 @@ function getAvarageTemp(province, date) {
   var result = $.grep(temperatures, function(e) { 
     return e.id == province && e.date == date; 
   });
+  console.log(date, result)
   if ( result.length > 0 ) {
     return result[0].ta * .1
   }
