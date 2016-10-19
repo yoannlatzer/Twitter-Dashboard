@@ -35,6 +35,8 @@ def clip(lower, value, upper):
 def tweet(ctx, e):
     if e.data['extra']['@@weather@@'] == 'y':
       ctx.totalTweets += 1
+      if ctx.totalTweets == 221:
+        setup(ctx, e)
       date = datetime.strptime(e.data['created_at'], '%a %b %d %H:%M:%S %z %Y')
       ctx.now = "{}{}{}".format(date.year, date.month, date.day)
       if ctx.now != ctx.currentDay:
