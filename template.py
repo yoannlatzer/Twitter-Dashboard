@@ -17,10 +17,10 @@ def add_request_handlers(httpd):
 @event('init')
 def setup(ctx, e):
     # set empty buffer
-    ctx.buffer = {'tweets': [], 'potd': []}
+    ctx.buffer = {'tweets': [], 'potd': [photos[0]]}
     ctx.mood = {'g': 0, 'b': 0, 'n': 0}
     ctx.calculatedMood = 0
-    ctx.photoCount = 0
+    ctx.photoCount = 1
     ctx.totalTweets = 1
     ctx.currentDay = 0
     ctx.dayTweets = 0
