@@ -5455,6 +5455,7 @@ function getAvarageTemp(province, date) {
   var result = $.grep(temperatures, function(e) { 
     return e.id == province && e.date == date; 
   });
+  console.log(date, result)
   if ( result.length > 0 ) {
     return result[0].ta * .1
   }
@@ -5500,58 +5501,40 @@ function drawRegionsMap(date, mood) {
   }
   if ( window.type == 'temperature' ) {
     var data = google.visualization.arrayToDataTable([
-      ['Province', 'Temperature', 'Mood'],
-      ['Noord-Holland', getAvarageTemp(235, date), mood['Noord-Holland']],
-      ['Utrecht', getAvarageTemp(260, date), mood['Utrecht']],
-      ['Friesland', getAvarageTemp(270, date), mood['Friesland']],
-      ['Flevoland', getAvarageTemp(273, date), mood['Flevoland']],
-      ['Gelderland', getAvarageTemp(275, date), mood['Gelderland']],
-      ['Drenthe', getAvarageTemp(280, date), mood['Drenthe']],
-      ['Groningen', getAvarageTemp(286, date), mood['Groningen']],
-      ['Overijssel', getAvarageTemp(290, date), mood['Overijssel']],
-      ['Zeeland', getAvarageTemp(310, date), mood['Zeeland']],
-      ['Zuid-Holland', getAvarageTemp(344, date), mood['Zuid-Holland']],
- 	    ['Noord-Brabant', getAvarageTemp(370, date), mood['Noord-Brabant']],
-      ['Limburg', getAvarageTemp(380, date), mood['Limburg']]
+      ['Province', 'Temperature'],
+      ['Noord-Holland', getAvarageTemp(235, date)],
+      ['Utrecht', getAvarageTemp(260, date)],
+      ['Friesland', getAvarageTemp(270, date)],
+      ['Flevoland', getAvarageTemp(273, date)],
+      ['Gelderland', getAvarageTemp(275, date)],
+      ['Drenthe', getAvarageTemp(280, date)],
+      ['Groningen', getAvarageTemp(286, date)],
+      ['Overijssel', getAvarageTemp(290, date)],
+      ['Zeeland', getAvarageTemp(310, date)],
+      ['Zuid-Holland', getAvarageTemp(344, date)],
+ 	    ['Noord-Brabant', getAvarageTemp(370, date)],
+      ['Limburg', getAvarageTemp(380, date)]
     ]);
     
   }
   if ( window.type == 'rain' ) {
     var data = google.visualization.arrayToDataTable([
-      ['Province', 'Rain', 'Mood'],
-      ['Noord-Holland', getRain(235, date), mood['Noord-Holland']],
-      ['Utrecht', getRain(260, date), mood['Utrecht']],
-      ['Friesland', getRain(270, date), mood['Friesland']],
-      ['Flevoland', getRain(273, date), mood['Flevoland']],
-      ['Gelderland', getRain(275, date), mood['Gelderland']],
-      ['Drenthe', getRain(280, date), mood['Drenthe']],
-      ['Groningen', getRain(286, date), mood['Groningen']],
-      ['Overijssel', getRain(290, date), mood['Overijssel']],
-      ['Zeeland', getRain(310, date), mood['Zeeland']],
-      ['Zuid-Holland', getRain(344, date), mood['Zuid-Holland']],
- 	    ['Noord-Brabant', getRain(370, date), mood['Noord-Brabant']],
-      ['Limburg', getRain(380, date), mood['Limburg']]
+      ['Province', 'Rain'],
+      ['Noord-Holland', getRain(235, date)],
+      ['Utrecht', getRain(260, date)],
+      ['Friesland', getRain(270, date)],
+      ['Flevoland', getRain(273, date)],
+      ['Gelderland', getRain(275, date)],
+      ['Drenthe', getRain(280, date)],
+      ['Groningen', getRain(286, date)],
+      ['Overijssel', getRain(290, date)],
+      ['Zeeland', getRain(310, date)],
+      ['Zuid-Holland', getRain(344, date)],
+ 	    ['Noord-Brabant', getRain(370, date)],
+      ['Limburg', getRain(380, date)]
     ]);
     options.colorAxis = {minValue: 0, maxValue: 30, colors: ['white', 'blue']}
     
-  }
-  if (window.type == 'mood') {
-    var data = google.visualization.arrayToDataTable([
-      ['Province', 'Mood'],
-      ['Noord-Holland', mood['Noord-Holland']],
-      ['Utrecht', mood['Utrecht']],
-      ['Friesland', mood['Friesland']],
-      ['Flevoland', mood['Flevoland']],
-      ['Gelderland', mood['Gelderland']],
-      ['Drenthe', mood['Drenthe']],
-      ['Groningen', mood['Groningen']],
-      ['Overijssel', mood['Overijssel']],
-      ['Zeeland', mood['Zeeland']],
-      ['Zuid-Holland', mood['Zuid-Holland']],
- 	    ['Noord-Brabant', mood['Noord-Brabant']],
-      ['Limburg', mood['Limburg']]
-    ]);
-    options.colorAxis = {minValue: 0, maxValue: 10, colors: ['red', 'green']}
   }
   if ( window.type == 'tweets') {
     var data = google.visualization.arrayToDataTable(mood)
@@ -5572,7 +5555,6 @@ function drawRegionsMap(date, mood) {
           tweets.push({
             tweet: t,
             date: tweet.date,
-            mood: tweet.mood
           })
         })
       }
@@ -5582,18 +5564,14 @@ function drawRegionsMap(date, mood) {
       
       tweets.map(function(tweet) {
         if (window.type == 'temperature' && (currentDate != tweet.date || last != 'temperature')) {
-          drawRegionsMap(tweet.date, tweet.mood)
+          drawRegionsMap(tweet.date, null)
           currentDate = tweet.date
           last = 'temperature'
         }
         else if (window.type == 'rain' && (currentDate != tweet.date || last != 'rain')) {
           last = 'rain'
           currentDate = tweet.date
-          drawRegionsMap(tweet.date, tweet.mood)
-        }
-        else if (window.type == 'mood') {
-          last = 'mood'
-          drawRegionsMap(tweet.date, tweet.mood)
+          drawRegionsMap(tweet.date, null)
         }
         else if (window.type == 'tweets') {
           last = 'tweets'

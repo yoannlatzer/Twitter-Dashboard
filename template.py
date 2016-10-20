@@ -35,8 +35,11 @@ def clip(lower, value, upper):
 def tweet(ctx, e):
     if e.data['extra']['@@weather@@'] == 'y':
       ctx.totalTweets += 1
+      if ctx.totalTweets == 221:
+        setup(ctx, e)
       date = datetime.strptime(e.data['created_at'], '%a %b %d %H:%M:%S %z %Y')
-      ctx.now = "{}{}{}".format(date.year, date.month, date.day)
+      ctx.now = "{:%Y%m%d}".format(date)
+
       if ctx.now != ctx.currentDay:
         ctx.currentDay = ctx.now
         ctx.dayTweets = 0
@@ -59,24 +62,9 @@ def tweet(ctx, e):
         ctx.photoCount = 0
         
       ctx.buffer['tweets'].append(e.data)
-      print (e.data['text'])  
+      print(ctx.now)
       emit('tweet', {
         'date': ctx.now,
-        'mood': {
-          'total': ctx.mood,
-          'Noord-Holland': random.uniform(0, 10),
-          'Utrecht': random.uniform(0, 10),
-          'Friesland': random.uniform(0, 10),
-          'Flevoland': random.uniform(0, 10),
-          'Gelderland': random.uniform(0, 10),
-          'Drenthe': random.uniform(0, 10),
-          'Groningen': random.uniform(0, 10),
-          'Overijssel': random.uniform(0, 10),
-          'Zeeland': random.uniform(0, 10),
-          'Zuid-Holland': random.uniform(0, 10),
-          'Noord-Brabant': random.uniform(0, 10),
-          'Limburg': random.uniform(0, 10)
-        },
         'count': {
           'day': ctx.dayTweets,
           'total': ctx.totalTweets
@@ -122,22 +110,9 @@ def emitPhoto(ctx, e):
   
 @event('buffer')
 def loadBuffer(ctx, e):
+  ctx.buffer['moodGeneral'] = {'moodLevel': ctx.calculatedMood}
   emit('buffer', {
       'date': ctx.currentDay,
-      'mood': {
-        'Noord-Holland': random.uniform(0, 10),
-        'Utrecht': random.uniform(0, 10),
-        'Friesland': random.uniform(0, 10),
-        'Flevoland': random.uniform(0, 10),
-        'Gelderland': random.uniform(0, 10),
-        'Drenthe': random.uniform(0, 10),
-        'Groningen': random.uniform(0, 10),
-        'Overijssel': random.uniform(0, 10),
-        'Zeeland': random.uniform(0, 10),
-        'Zuid-Holland': random.uniform(0, 10),
-        'Noord-Brabant': random.uniform(0, 10),
-        'Limburg': random.uniform(0, 10)
-      },
       'buffer': ctx.buffer,
       'count': {
         'day': ctx.dayTweets,
