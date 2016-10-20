@@ -9,19 +9,19 @@
     $('#mood-div').animate({"height": mapInt(moodLevel, 0, 2, 0, 250) + "px"});
 
     if (moodLevel < 1) {
-      $('#moodtxt').remove();
+      $('#mood-details').remove();
       $('#mood-div').animate({backgroundColor: "#F44336"});
-      $('#mood-container').append('<p id="moodtxt">Current Mood: Sad</p>');
+      $('#mood-container').append('<div id="mood-details"><p>Current Mood: Sad</p><img src="/img/sad.png"></img></div>');
     }
     else if (moodLevel > 1) {
-      $('#moodtxt').remove();
+      $('#mood-details').remove();
       $('#mood-div').animate({backgroundColor: "#00E676"});
-      $('#mood-container').append('<p id="moodtxt">Current Mood: Happy</p>');
+      $('#mood-container').append('<div id="mood-details"><p>Current Mood: Happy</p><img src="/img/happy.png"></img></div>');
     }
     else {
-      $('#moodtxt').remove();
+      $('#mood-details').remove();
       $('#mood-div').animate({backgroundColor: "#FFF176"});
-      $('#mood-container').append('<p id="moodtxt">Current Mood: Average</p>');
+      $('#mood-container').append('<div id="mood-details"><p>Current Mood: Neutral</p><img src="/img/neutral.png"></img></div>');
     }
   }
 

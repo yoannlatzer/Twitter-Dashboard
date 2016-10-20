@@ -171,8 +171,19 @@ pre {
     margin: 0px auto;
 }
 
-#moodtxt {
-    text-align: center;
+#mood-details {
+    width: 65%;
+    margin: 0 auto 0;
     transform: rotate(180deg);
+}
+
+#mood-details p {
+    float: left;
+}
+
+#mood-details img {
+    height: 25px;
+    width: 25px;
+    margin-bottom: 5px;
 }
 
