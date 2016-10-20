@@ -18,11 +18,12 @@
     else {
       rain = 0;
     }
-    
+    //temp < 5 = cold, rain > 0 = rain, temp > 20 = hot, others = normal.
+    // Where cold = windjacket, rain = storm umbrella, hot = sunglasses and normal = umbrella
     if ( temperature < 5 ) {
       return "cold"
     }
-    if ( rain > 1 ) { 
+    if ( rain > 0 ) { 
       return "rain"
     }
     if ( temperature > 20 ) {
@@ -46,7 +47,7 @@
 			'speed': 400 // 'normal'
 		}, options);
     
-    this.$element.append('<div id="ad">');
+    this.$element.append('<div id="ad"><a href="https://www.bol.com/nl/p/falcone-windproof-paraplu-o-130-cm-wit/9200000046254439/?suggestionType=browse"><img src="/img/ad/umbrella.jpg" alt=""></a></div>');
     
     this.actions(function(e, message){
       if ( date != message.date ) {
