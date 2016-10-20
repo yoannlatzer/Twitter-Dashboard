@@ -36,10 +36,10 @@
   
   // Ads object {[type]: ad}
   var ads = {
-    normal: '<a href="https://www.bol.com/nl/p/falcone-windproof-paraplu-o-130-cm-wit/9200000046254439/?suggestionType=browse"><img src="/img/ad/umbrella.jpg" alt=""></a>',
-    rain: '<a href="https://www.bol.com/nl/p/senz-smart-s-stormparaplu-opvouwbaar-o-87-cm-deep-blue/9200000023062558/?suggestionType=browse"><img src="/img/ad/storm-umbrella.jpg" alt=""></a>',
-    cold: '<a href="http://www.decathlon.nl/windjack-h-500-ulight-blauw-id_8309828.html"><img src="/img/ad/windjacket.jpg" alt=""> </a>',
-    hot: '<a href="https://www.pearle.nl/zonnebrillen/exclusieve-ray-ban-collectie"><img src="/img/ad/sunglasses.jpg" alt=""> </a>'
+     normal: '<a href="https://www.bol.com/nl/p/falcone-windproof-paraplu-o-130-cm-wit/9200000046254439/?suggestionType=browse" target="_blank"><img src="/img/ad/umbrella.jpg" alt="" style="align:center; valign:center ;width:100%; height:auto;"></a>',
+    rain: '<a href="https://www.bol.com/nl/p/senz-smart-s-stormparaplu-opvouwbaar-o-87-cm-deep-blue/9200000023062558/?suggestionType=browse" target="_blank"><img src="/img/ad/storm-umbrella.jpg" alt="" style="align:center; valign:center ;width:100%; height:auto;"></a>',
+    cold: '<a href="http://www.decathlon.nl/windjack-h-500-ulight-blauw-id_8309828.html" target="_blank"><img src="/img/ad/windjacket.jpg" alt="" style="align:center; valign:center ;width:100%; height:auto;"> </a>',
+    hot: '<a href="https://www.pearle.nl/zonnebrillen/exclusieve-ray-ban-collectie" target="_blank"><img src="/img/ad/sunglasses.jpg" alt="" style="align:center; valign:center ;width:100%; height:auto;"> </a>'
   }
   
   // Set cache date
@@ -51,7 +51,7 @@
 		}, options);
     
     // Make base div
-    this.$element.append('<div id="ad"><a href="https://www.bol.com/nl/p/falcone-windproof-paraplu-o-130-cm-wit/9200000046254439/?suggestionType=browse"><img src="/img/ad/umbrella.jpg" alt=""></a></div>');
+    this.$element.append('<div id="ad"><a href="https://www.bol.com/nl/p/falcone-windproof-paraplu-o-130-cm-wit/9200000046254439/?suggestionType=browse"><img src="/img/ad/umbrella.jpg" alt="" style="align:center; valign:center ;width:100%; height:auto;"></a></div>');
     this.actions(function(e, message){
       // Only update on date != message date
       if ( date != message.date ) {
