@@ -1,7 +1,7 @@
 @charset "utf-8";
 /* CSS Document */
-.wrapper {margin: 0 auto;border: 7px solid lightblue; background-color: #006699; width: 1408px; height: 391px;}
-#adtitle {text-align: center; border-bottom: 7px solid lightblue; font-weight: bold; font-size: 2.5em; margin: auto;}
+.wrapper {margin: 1 auto;border: 7px solid lightblue; background-color: #006699; width: 94%; height: 300;}
+#adtitle {text-align: center; border-bottom: 7px solid lightblue; font-weight: bold; font-size: 2.5em; margin: 5px;}
 
 #ad {position: relative;}
 #ad {position: absolute; display: none;}
