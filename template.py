@@ -9,72 +9,73 @@ from datetime import datetime
 ## (by default, it points to <rules>_static)
 # root_content_path = 'template_static'
 
+
+#create a buffer (used for keeping things in memory for a new connection)
 def add_request_handlers(httpd):
   httpd.add_route('/buffer', eca.http.GenerateEvent('buffer'), methods=["POST"])
 
 # binds the 'setup' function as the action for the 'init' event
 # the action will be called with the context and the event
-@event('init')
+@event('init')                                    #initialize the initial parameters so there are no errors in client side code
 def setup(ctx, e):
     # set empty buffer
     ctx.buffer = {'tweets': [], 'potd': [photos[0]]}
-    ctx.mood = {'g': 0, 'b': 0, 'n': 0}
+    ctx.mood = {'g': 0, 'b': 0, 'n': 0}           
     ctx.calculatedMood = 0
     ctx.photoCount = 1
     ctx.totalTweets = 1
     ctx.currentDay = 0
     ctx.dayTweets = 0
     ctx.now = 1
-    start_offline_tweets('weer_zonderburen.txt', 'chirp', time_factor=10000, arff_file='merge_final.arff')
+    start_offline_tweets('weer_zonderburen.txt', 'chirp', time_factor=10000, arff_file='merge_final.arff')  #start the tweetflow
 
 # define a normal Python function
-def clip(lower, value, upper):
-    return max(lower, min(value, upper))
 
-@event('chirp')
+
+@event('chirp')                                                           #give event name in which we stream the tweets
 def tweet(ctx, e):
     if e.data['extra']['@@weather@@'] == 'y':
-      ctx.totalTweets += 1
-      if ctx.totalTweets == 221:
-        setup(ctx, e)
+      ctx.totalTweets += 1                                                      #check if the tweet is about weather, if so, send it and add 1 to total counter
+      if ctx.totalTweets == 221:                                                #if the tweet is at max amount (of tweets that actually have to do with weather)
+        setup(ctx, e)                                                           #we return if above is case
       date = datetime.strptime(e.data['created_at'], '%a %b %d %H:%M:%S %z %Y')
-      ctx.now = "{:%Y%m%d}".format(date)
+      ctx.now = "{:%Y%m%d}".format(date)                                        #get date and format it for the timestamp
 
       if ctx.now != ctx.currentDay:
-        ctx.currentDay = ctx.now
-        ctx.dayTweets = 0
-        ctx.buffer['tweets'] = []
-        ctx.mood = {'g': 0, 'b': 0, 'n': 0}
+        ctx.currentDay = ctx.now                                                 #set day to next day
+        ctx.dayTweets = 0                                                        #reset number of tweets on client side for that day
+        ctx.buffer['tweets'] = []                                               #empty the tweet ubffer
+        ctx.mood = {'g': 0, 'b': 0, 'n': 0}                                     #reset the mood for the day
       
       ctx.dayTweets += 1
-      calculateMood(ctx, e)
+      calculateMood(ctx, e)                                                     #calculate mood based on tweet
             
-      # check for url to replace it with an working picture
+                                                                                # check for url to replace it with an working picture
       if 'media' in e.data['entities']:
         changeMedia(ctx, e)
         ctx.photoCount += 1
         
-      if len(e.data['entities']['urls']) > 0:
+      if len(e.data['entities']['urls']) > 0:                                   #select a picture
         changeUrls(ctx, e)
         ctx.photoCount += 1
         
       if ctx.photoCount > 14:
         ctx.photoCount = 0
         
-      ctx.buffer['tweets'].append(e.data)
+      ctx.buffer['tweets'].append(e.data)                                        #slowly build a buffer of tweets
       emit('tweet', {
         'date': ctx.now,
         'count': {
           'day': ctx.dayTweets,
           'total': ctx.totalTweets
-        },
+        },                                                                      #emit the tweet with set values
         'moodGeneral': {
           'moodLevel': ctx.calculatedMood
         },
         'tweet': e.data
       })  
 
-def calculateMood(ctx, e):
+def calculateMood(ctx, e):                                                      #calcuate the mood
   if e.data['extra']['@@sentiment@@'] == 'b':
     ctx.mood['b'] += 1
     
@@ -86,28 +87,28 @@ def calculateMood(ctx, e):
     
   ctx.calculatedMood = ((ctx.mood['g'] * 2) + ctx.mood['n']) / ctx.dayTweets
 
-def changeMedia(ctx, e): 
+def changeMedia(ctx, e):                                                                          #change the media (from dead links to working ones)
   e.data['text'] = e.data['text'].replace(e.data['entities']['media'][0]['url'], ' photo')
   e.data['entities']['media'][0]['url'] = urls[ctx.photoCount]
   e.data['entities']['media'][0]['display_url'] = ' photo'
   emitPhoto(ctx, e)
      
-def changeUrls(ctx, e):       
+def changeUrls(ctx, e):                                                          #we also change the in the tweet with a working one
   e.data['text'] = e.data['text'].replace(e.data['entities']['urls'][0]['url'], ' photo')
   e.data['entities']['urls'][0]['url'] = urls[ctx.photoCount]
   e.data['entities']['urls'][0]['display_url'] = ' photo'
   emitPhoto(ctx, e)
   
-def emitPhoto(ctx, e):
+def emitPhoto(ctx, e):                                                          #emit the photo if tweet is weather related
   if e.data['extra']['@@weather@@'] == 'y':
     emit('photo', {
       'photo': photos[ctx.photoCount]
     })
-    ctx.buffer['potd'].append(photos[ctx.photoCount])
+    ctx.buffer['potd'].append(photos[ctx.photoCount])                           #buffer it so a new user does not get an empty page
     if len(ctx.buffer['potd']) > 5:
       ctx.buffer['potd'].pop(0)
   
-@event('buffer')
+@event('buffer')                                                                #if a new connection we request the buffer
 def loadBuffer(ctx, e):
   ctx.buffer['moodGeneral'] = {'moodLevel': ctx.calculatedMood}
   emit('buffer', {
@@ -119,7 +120,7 @@ def loadBuffer(ctx, e):
       }
     })
     
-urls = [
+urls = [                                                                        #new urls for the urls that are being replaced
   'http://imgur.com/MqWFFPb',
   'http://imgur.com/oqXEEgh',
   'http://imgur.com/rV8W4O7',
@@ -138,7 +139,7 @@ urls = [
   'http://imgur.com/jENAMfB'
 ]
 
-photos = [
+photos = [                                                                      #new photos for the  photos that are being replaced
   'http://imgur.com/MqWFFPb.jpg',
   'http://imgur.com/oqXEEgh.jpg',
   'http://imgur.com/rV8W4O7.jpg',
