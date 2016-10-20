@@ -1,24 +1,26 @@
+/**
+ * Ads block shows map with ads related to the weather 
+ */
 (function($, block) {
+  /**
+   * Function getAdType gets the weather type for a spefic date
+   */
   var getAdType = function(date) {
-    var temperature = $.grep(window.weather, function(e) { 
+    // Get temperature
+    var weather = $.grep(window.weather, function(e) { 
       return e.id == 260 && e.date == date; 
     });
-    if ( temperature.length > 0 ) {
-      temperature = temperature[0].ta * .1
+    // Extract temperature from date object
+    if ( weather.length > 0 ) {
+      temperature = weather[0].ta * .1;
+      rain = weather[0].rain * .1;
     }
     else {
       temperature = 0;
+      rain = 0; 
     }
-    var rain = $.grep(window.weather, function(e){
-      return e.id == 260 && e.date == date; 
-    });
-    if ( rain.length > 0 ) {
-      rain = rain[0].rain * .1
-    }
-    else {
-      rain = 0;
-    }
-    //temp < 5 = cold, rain > 0 = rain, temp > 20 = hot, others = normal.
+    
+    // temp < 5 = cold, rain > 0 = rain, temp > 20 = hot, others = normal.
     // Where cold = windjacket, rain = storm umbrella, hot = sunglasses and normal = umbrella
     if ( temperature < 5 ) {
       return "cold"
@@ -32,6 +34,7 @@
     return "normal"
   }
   
+  // Ads object {[type]: ad}
   var ads = {
     normal: '<a href="https://www.bol.com/nl/p/falcone-windproof-paraplu-o-130-cm-wit/9200000046254439/?suggestionType=browse"><img src="/img/ad/umbrella.jpg" alt=""></a>',
     rain: '<a href="https://www.bol.com/nl/p/senz-smart-s-stormparaplu-opvouwbaar-o-87-cm-deep-blue/9200000023062558/?suggestionType=browse"><img src="/img/ad/storm-umbrella.jpg" alt=""></a>',
@@ -39,46 +42,32 @@
     hot: '<a href="https://www.pearle.nl/zonnebrillen/exclusieve-ray-ban-collectie"><img src="/img/ad/sunglasses.jpg" alt=""> </a>'
   }
   
+  // Set cache date
   var date = 0
-  
 	block.fn.ads = function(options) {
 		options = $.extend({
 			'timeout': 3000,
 			'speed': 400 // 'normal'
 		}, options);
     
+    // Make base div
     this.$element.append('<div id="ad"><a href="https://www.bol.com/nl/p/falcone-windproof-paraplu-o-130-cm-wit/9200000046254439/?suggestionType=browse"><img src="/img/ad/umbrella.jpg" alt=""></a></div>');
-    
     this.actions(function(e, message){
+      // Only update on date != message date
       if ( date != message.date ) {
         date = message.date
         $div = $('div', this);
+        // hide old ad
         $div.hide();
+        // get weather type
         var type = getAdType(message.date)
+        // Set ad to div
         $div.html(ads[type]);
+        // Fade in ad
         $div.fadeIn(options.speed);
       }
 		});
     
     return this.$element;
-		// We loop through the selected elements, in case the ad was called on more than one element e.g. `$('.foo, .bar').ad();`
-	/*
-   <a href="https://www.bol.com/nl/p/falcone-windproof-paraplu-o-130-cm-wit/9200000046254439/?suggestionType=browse"><img src="umbrella.jpg" alt=""> </a>
-   <a href="https://www.bol.com/nl/p/senz-smart-s-stormparaplu-opvouwbaar-o-87-cm-deep-blue/9200000023062558/?suggestionType=browse"><img src="storm-umbrella.jpg" alt=""></a>
-   <a href="http://www.decathlon.nl/windjack-h-500-ulight-blauw-id_8309828.html"><img src="windjacket.jpg" alt=""> </a>
-   <a href="https://www.pearle.nl/zonnebrillen/exclusieve-ray-ban-collectie"><img src="sunglasses.jpg" alt=""> </a>
-    	return this.each(function() {
-			// Inside the setInterval() block, `this` references the window object instead of the ad container element, so we store it inside a var
-			var $elem = $(this);
-			$elem.children().eq(0).appendTo($elem).show();
-			// Iterate through the slides
-			setInterval(function() {
-				$elem.children().eq(0)
-				// Hide the current slide and append it to the end of the image stack
-				.hide().appendTo($elem) // As of jQuery 1.3.2, .appendTo() returns the inserted element
-				// Fade in the next slide
-				.fadeIn(options.speed)
-			}, options.timeout);
-		});*/
 	};
 }(jQuery, block));
