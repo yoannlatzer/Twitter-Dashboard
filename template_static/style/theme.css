@@ -162,11 +162,17 @@ pre {
 /* Mood Meter */
 
 #mood-container {
-    height: 250px;
+    height: 260px;
+    transform: rotate(180deg);
 }
 
 #mood-div {
     width: 70%;
     margin: 0px auto;
+}
+
+#moodtxt {
+    text-align: center;
+    transform: rotate(180deg);
 }
 
