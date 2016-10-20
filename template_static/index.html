@@ -5,6 +5,7 @@
 <link rel="icon" type="image/png" 
       href="/img/favicon.png">
 <link rel="stylesheet" href="/style/layout.css"/>
+<link rel="stylesheet" href="/style/ad.css"/>
 <link rel="stylesheet" href="/style/project.css"/>
 <link rel="stylesheet" href="/style/theme.css"/>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -14,6 +15,8 @@
 <script src="/lib/jquery.flot.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+<script src="/weather.js"></script>
+
 <script src="/lib/core.js"></script>
 <script src="/lib/charts.js"></script>
 <script src="/lib/log.js"></script>
@@ -23,7 +26,7 @@
 <script src="/counter.js"></script>
 <script src="/moodlevel.js"></script>
 <script src="/photos.js"></script>
-<!--<script src="/tweets.js"></script>-->
+<script src="/ads.js"></script>
 <script type="text/javascript">
 window.type = 'temperature'
 function setHeatMap(type) {
@@ -88,6 +91,14 @@ function setHeatMap(type) {
       </div>
     </div>
   </div>
+  <div class="row">
+    <div class="wrapper">
+      <div id="adtitle">
+        <p>ITEM TO BRING TODAY</p>
+      </div>
+      <div id="ads"></div>
+    </div>
+  </div>
 </div>
 <script src="bootstrap/js/bootstrap.min.js"></script>   
 <script>
@@ -98,6 +109,7 @@ block('#heatmap').heatmap();
 block('#mood-div').moodlevel();
 block('#counter').counter();
 block('#pictures-carousel').photos();
+block('#ads').ads();
 block('#tweets').tweets({
   memory: 3
 });
@@ -108,6 +120,7 @@ events.connect('tweet', '#mood-div');
 events.connect('tweet', '#heatmap');
 events.connect('tweet', '#counter');
 events.connect('tweet', '#tweets');
+events.connect('tweet', '#ads');
 events.connect('photo', '#pictures-carousel');
 events.connect('buffer', '#pictures-carousel');
 events.connect('buffer', '#tweets');

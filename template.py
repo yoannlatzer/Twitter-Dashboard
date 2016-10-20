@@ -25,7 +25,7 @@ def setup(ctx, e):
     ctx.currentDay = 0
     ctx.dayTweets = 0
     ctx.now = 1
-    start_offline_tweets('weer_zonderburen.txt', 'chirp', time_factor=10000, arff_file='merge_final.arff')
+    start_offline_tweets('weer_zonderburen.txt', 'chirp', time_factor=50000, arff_file='merge_final.arff')
 
 # define a normal Python function
 def clip(lower, value, upper):
@@ -62,7 +62,6 @@ def tweet(ctx, e):
         ctx.photoCount = 0
         
       ctx.buffer['tweets'].append(e.data)
-      print(ctx.now)
       emit('tweet', {
         'date': ctx.now,
         'count': {
