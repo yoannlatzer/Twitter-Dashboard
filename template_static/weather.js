@@ -1,10 +1,7 @@
+/**
+ * Weather data for twitter data set
+ */
 // http://projects.knmi.nl/klimatologie/daggegevens/selectie.cgi  
-// id       = ^^ province id
-// date     = Datum (YYYY=jaar MM=maand DD=dag); 
-// ta       = Etmaalgemiddelde temperatuur (in 0.1 graden Celsius); 
-// tl       = Minimum temperatuur (in 0.1 graden Celsius); 
-// tm       = Maximum temperatuur (in 0.1 graden Celsius); 
-// rain     = Etmaalsom van de neerslag (in 0.1 mm) (-1 voor <0.05 mm);
 window.provinces = [
     {id: 235, name: 'Noord-Holland'},
     {id: 260, name: 'Utrecht'},
@@ -19,6 +16,12 @@ window.provinces = [
     {id: 370, name: 'Noord-Brabant'},
     {id: 380, name: 'Limburg'}
 ];
+// id       = ^^ province id
+// date     = Datum (YYYY=jaar MM=maand DD=dag); 
+// ta       = Etmaalgemiddelde temperatuur (in 0.1 graden Celsius); 
+// tl       = Minimum temperatuur (in 0.1 graden Celsius); 
+// tm       = Maximum temperatuur (in 0.1 graden Celsius); 
+// rain     = Etmaalsom van de neerslag (in 0.1 mm) (-1 voor <0.05 mm);
 window.weather = [
   {id: 235, date: 20101009, ta:  131, tl:  109, tm:  159, rain:   0},
   {id: 235, date: 20101010, ta:  121, tl:   98, tm:  145, rain:   0},

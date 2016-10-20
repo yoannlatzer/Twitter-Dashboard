@@ -1,6 +1,12 @@
+/**
+ * Heatmap block shows map with current weather status and tweets of the day  
+ */
 (function($, block) {
   google.charts.load('upcoming', {'packages':['geomap']});
 
+/**
+ * Get average temprature of certain date for a certain province
+ */
 function getAvarageTemp(province, date) {
   var result = $.grep(window.weather, function(e) { 
     return e.id == province && e.date == date; 
@@ -10,6 +16,9 @@ function getAvarageTemp(province, date) {
   }
 }
 
+/**
+ * Get rain of certain date for a certain province
+ */
 function getRain(province, date) {
   var result = $.grep(window.weather, function(e) { 
     return e.id == province && e.date == date; 
@@ -18,8 +27,8 @@ function getRain(province, date) {
     return result[0].rain * .1
   }
 }
-//console.log(getAvarageTemp(380, 20120103))
 
+// Initial load geochart
 google.charts.setOnLoadCallback(drawRegionsMap.bind(this, 20101009, {
   'Noord-Holland': 0,
   'Utrecht': 0,
@@ -45,9 +54,11 @@ function drawRegionsMap(date, mood) {
     datalessRegionColor: '#E0E0E0',
     defaultColor: '#f5f5f5',
   };
+  // Check if geocharts are loaded
   if (typeof google.visualization == 'undefined' || typeof google.visualization.arrayToDataTable == 'undefined') {
     return;
   }
+  // Set data for map type temperature
   if ( window.type == 'temperature' ) {
     var data = google.visualization.arrayToDataTable([
       ['Province', 'Temperature'],
@@ -66,6 +77,7 @@ function drawRegionsMap(date, mood) {
     ]);
     
   }
+  // Set data for map type rain
   if ( window.type == 'rain' ) {
     var data = google.visualization.arrayToDataTable([
       ['Province', 'Rain'],
@@ -82,25 +94,32 @@ function drawRegionsMap(date, mood) {
  	    ['Noord-Brabant', getRain(370, date)],
       ['Limburg', getRain(380, date)]
     ]);
+    // Change map colors
     options.colorAxis = {minValue: 0, maxValue: 30, colors: ['white', 'blue']}
     
   }
+  // Set data for map type tweets
   if ( window.type == 'tweets') {
     var data = google.visualization.arrayToDataTable(mood)
     options.displayMode = 'markers';
   }
-
+  // Render geochart
   var chart = new google.visualization.GeoChart(document.getElementById('geochart-colors'));
   chart.draw(data, options);
 };
+  // Set base variables
   var currentDate = 0;
   var last = 'temperature'
   var currentDayTweets = []
+  // Heatmap block function
   block.fn.heatmap = function(config) {
     this.actions(function(e, tweet) {
       var tweets = [];
+      // Check for buffer
       if ( typeof tweet.buffer != 'undefined' ) {
+        // Map through tweet buffer
         tweet.buffer.tweets.map(function(t) {
+          // add buffer tweet to list
           tweets.push({
             tweet: t,
             date: tweet.date,
@@ -108,41 +127,50 @@ function drawRegionsMap(date, mood) {
         })
       }
       else {
+        // add new tweet to list
         tweets.push(tweet)
       }
       
+      // Map through tweets
       tweets.map(function(tweet) {
+        // Look for map type == temperature, date change and previous map
         if (window.type == 'temperature' && (currentDate != tweet.date || last != 'temperature')) {
-          drawRegionsMap(tweet.date, null)
-          currentDate = tweet.date
           last = 'temperature'
+          currentDate = tweet.date
+          drawRegionsMap(tweet.date, null)
         }
+        // Look for map type == rain, date change and previous map
         else if (window.type == 'rain' && (currentDate != tweet.date || last != 'rain')) {
           last = 'rain'
           currentDate = tweet.date
           drawRegionsMap(tweet.date, null)
         }
+        // Look for map type == tweets
         else if (window.type == 'tweets') {
           last = 'tweets'
+          // Check for date change and currentDayTweets count > 0
           if ( currentDate == tweet.date && currentDayTweets.length > 0 ) {
-            if ( tweet.tweet.coordinates != null && typeof tweet.tweet.coordinates == 'object') {
-              if ( tweet.tweet.coordinates.type == 'Point') {              
-                currentDayTweets.push([tweet.tweet.coordinates.coordinates[1], tweet.tweet.coordinates.coordinates[0], tweet.tweet.text])
-              }
+            // check if tweet has coordinates
+            if ( tweet.tweet.coordinates != null && typeof tweet.tweet.coordinates == 'object' && tweet.tweet.coordinates.type == 'Point') {
+              // Add tweet to list
+              currentDayTweets.push([tweet.tweet.coordinates.coordinates[1], tweet.tweet.coordinates.coordinates[0], tweet.tweet.text])
             }
           }
           else {
+            // Set current date
             currentDate = tweet.date
-            if ( tweet.tweet.coordinates != null && typeof tweet.tweet.coordinates == 'object') {
-              if ( tweet.tweet.coordinates.type == 'Point') {
-                currentDayTweets = [
-                  ['Lat', 'Long', 'Tweet'],
-                  [tweet.tweet.coordinates.coordinates[1], tweet.tweet.coordinates.coordinates[0], tweet.tweet.text]
-                ]
-              }
+            // check if tweet has coordinates
+            if ( tweet.tweet.coordinates != null && typeof tweet.tweet.coordinates == 'object' && tweet.tweet.coordinates.type == 'Point') {
+              // Set currentDayTweets list
+              currentDayTweets = [
+                ['Lat', 'Long', 'Tweet'],
+                [tweet.tweet.coordinates.coordinates[1], tweet.tweet.coordinates.coordinates[0], tweet.tweet.text]
+              ]
             }
           }
+          // Check if there are tweets in the list
           if (currentDayTweets.length > 0) {
+            // Render tweets on the map
             drawRegionsMap(tweet.date, currentDayTweets)
           }
         }
