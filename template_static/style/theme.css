@@ -15,16 +15,6 @@ body {
 	margin-right: auto;
 	margin-bottom: 20px;
 	background-color: rgba(255,255,255,0.45);
-	
-	-moz-box-shadow: 0 0 10px #222;
-	-webkit-box-shadow: 0 0 10px #222;
-	box-shadow: 0 0 10px #222;
-	padding: 5px;
-	
-	border-bottom-left-radius: 30px;
-	-moz-border-radius-bottomleft: 30px;
-  border-bottom-right-radius: 30px;
-  -moz-border-radius-bottomright: 30px;
 }
 
 p {
@@ -187,7 +177,7 @@ pre {
 /* Mood Meter */
 
 #mood-container {
-    height: 280px;
+    height: 357px;
     transform: rotate(180deg);
 }
 
