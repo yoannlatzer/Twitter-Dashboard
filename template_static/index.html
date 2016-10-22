@@ -57,13 +57,13 @@ function setHeatMap(type) {
               <span class="sr-only">Next
               </span>      </a>    
           </div>   
-         <div class="col-xs-2 group" style="padding-top:20px; padding-bottom:5px; height: 400px;">      
+         <div class="col-xs-2 group pull-right" style="padding-top:20px; padding-bottom:5px; height: 400px;">      
             <div id="mood-container">        
               <div id="mood-div">
               </div>      
             </div>    
           </div>    
-          <div id="heatmap" class="col-md-4 group" style="height:400px;">      
+          <div id="heatmap" class="col-md-4 group pull-right" style="height:400px;">      
             <div id="geochart-colors" class="">
             </div>      
             <div class="row" style="margin-left:5px;">             
@@ -111,7 +111,7 @@ block('#counter').counter();
 block('#pictures-carousel').photos();
 block('#ads').ads();
 block('#tweets').tweets({
-  memory: 3
+  memory: 4
 });
 // connect sample event to graph
 events.connect('tweet', '#date');
